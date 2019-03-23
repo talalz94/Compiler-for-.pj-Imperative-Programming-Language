@@ -1,0 +1,2 @@
+# Compiler-for-.pj-Imperative-Programming-Language
+The .pj (dotpj) is a general-purpose function based imperative programming language. This language is not for production use. It is best suited to complete on the go calculation tasks and lite input handling. This language is for the people to start learning coding without getting into the complexity of programming language and mainly developed to learn the development and working of a compiler. 
