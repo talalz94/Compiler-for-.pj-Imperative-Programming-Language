@@ -42,7 +42,7 @@ errorList =[]
 
 
 #Valid Keywords in this language
-keyWords = ['END', 'def', 'for', 'range', 'while', 'TRUE', 'FALSE', 'if', 'else', 'else if', 'return', 'NULL', 'input', 'var', 'int', 'str', 'and', 'or', 'not']
+keyWords = ['END', 'def', 'for', 'range', 'while', 'TRUE', 'FALSE', 'if', 'else', 'else if', 'return','bool', 'NULL', 'input', 'var', 'int', 'str', 'and', 'or', 'not']
 
 #Valid alphanumeric characters in this language
 caps = range(ord('A'), ord('Z')+1)
@@ -64,14 +64,15 @@ logicalOperators={'and':'logical_and', 'or':'logical_or', 'not':'logical_not'}
 def lexMain(fname):
 
     global prog,fileName,progLen
-    
+    errorList =[]
+
     #fname = input("Input File Name: ")
     prog = open(fname, 'r').read()
     fileName = fname.split('.', 1)[0]
     progLen = len(prog)
     mainLoop()
     saveFiles()
-
+    print('ErrorList1: ', errorList)
     return tokenList,errorList, symbolTableTemp
     #popUpResult()
 
@@ -371,7 +372,8 @@ def stateKeyWordorIdentifier(i, buffer):
 
             if a in logicalOperators.keys():
                 
-                tokenize(a,logicalOperators.get(a))
+                #tokenize(a,logicalOperators.get(a))
+                tokenize(a,'logical-operator')
             else:
                 tokenize(a,'keyword')
             if notNull:
@@ -493,7 +495,8 @@ def stateOperator(i, buffer):
     if (i == ' ' or i == '/n' or not operatorCheck(i) or opCount == 2) and (opCount < 3):
         lexeme = buffer[:-1]
         a = (''.join([str(x) for x in lexeme]))
-        tokenize(operators.get(a, 'invalid operator'), 'operator')
+        #tokenize(operators.get(a, 'invalid operator'), 'operator')
+        tokenize(a, 'operator')
         opCount = 0
 
         if (i == ' ' or i =='\n' ):
@@ -557,13 +560,19 @@ def saveErrorData():
     f = open(fileName + '.err',"w+")
 
     for i in range (len(errorList)):
-        f.write('Line: '+ errorList[i][0] + ' -  Error Code: '+ str(errorList[i][1])+' -  Error: '+ errorList[i][2] +
-                ' at " ' + errorList[i][3] + ' \"'+' -  Status: '+errorList[i][4]+' -  Action: '+errorList[i][5] + '\n')
+
+        if type(errorList[i]) == list:
+
+            f.write(errorList[i][0] + '\n')
+        else:
+            f.write('Line: '+ errorList[i][0] + ' -  Error Code: '+ str(errorList[i][1])+' -  Error: '+ errorList[i][2] +
+                    ' at " ' + errorList[i][3] + ' \"'+' -  Status: '+errorList[i][4]+' -  Action: '+errorList[i][5] + '\n')
 
     f.close()
 
 #Saves all files
 def saveFiles():
+    
     saveTokenData()
     saveErrorData()
     saveSymbolData()
